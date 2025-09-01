@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Portal</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .card {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      width: 320px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    input {
+      width: 100%;
+      padding: 0.6rem;
+      margin: 0.5rem 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      width: 100%;
+      padding: 0.7rem;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .hidden {
+      display: none;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      margin: 0.5rem 0;
+    }
+    a {
+      color: #007bff;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <!-- Login Form -->
+  <div id="login-card" class="card">
+    <h2>Student Login</h2>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="login()">Login</button>
+    <p id="error" style="color:red; text-align:center;"></p>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="dashboard" class="card hidden">
+    <h2>Welcome, <span id="student-name"></span></h2>
+    <p>Your assigned files:</p>
+    <ul id="file-list"></ul>
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <script>
+    // Hardcoded users & assigned files
+    const users = {
+      "alice": { password: "1234", files: ["files/math.pdf", "files/notes.docx"] },
+      "bob":   { password: "5678", files: ["files/history.pdf"] },
+      "carol": { password: "abcd", files: [] }
+    };
+
+    function login() {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const error = document.getElementById("error");
+
+      if (users[username] && users[username].password === password) {
+        document.getElementById("login-card").classList.add("hidden");
+        document.getElementById("dashboard").classList.remove("hidden");
+        document.getElementById("student-name").textContent = username;
+
+        const fileList = document.getElementById("file-list");
+        fileList.innerHTML = "";
+        if (users[username].files.length > 0) {
+          users[username].files.forEach(file => {
+            const li = document.createElement("li");
+            li.innerHTML = `<a href="${file}" target="_blank">${file.split("/").pop()}</a>`;
+            fileList.appendChild(li);
+          });
+        } else {
+          fileList.innerHTML = "<li>No files assigned.</li>";
+        }
+      } else {
+        error.textContent = "Invalid username or password.";
+      }
+    }
+
+    function logout() {
+      document.getElementById("dashboard").classList.add("hidden");
+      document.getElementById("login-card").classList.remove("hidden");
+      document.getElementById("username").value = "";
+      document.getElementById("password").value = "";
+      document.getElementById("error").textContent = "";
+    }
+  </script>
+</body>
+</html>
